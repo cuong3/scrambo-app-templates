@@ -1,0 +1,16 @@
+{
+  "name": "scrambo-apps",
+  "version": "0.1.0",
+  "private": true,
+  "packageManager": "pnpm@11.9.0",
+  "scripts": {
+    "quickstart": "node examples/basic-integration.mjs",
+    "check": "pnpm -r --if-present check",
+    "test": "pnpm -r --if-present test",
+    "typecheck": "pnpm -r --if-present typecheck",
+    "verify": "pnpm check && pnpm test && pnpm typecheck"
+  },
+  "engines": {
+    "node": ">=22"
+  }
+}

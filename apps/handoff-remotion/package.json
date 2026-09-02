@@ -1,0 +1,28 @@
+{
+  "name": "@scrambo/handoff-remotion",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "caption:v2": "node --experimental-strip-types v2-caption-render.ts",
+    "render": "node render.mjs",
+    "studio": "remotion studio src/index.tsx",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@scrambo/shared": "workspace:*",
+    "@remotion/bundler": "4.0.517",
+    "@remotion/cli": "4.0.517",
+    "@remotion/renderer": "4.0.517",
+    "react": "18.3.1",
+    "react-dom": "18.3.1",
+    "remotion": "4.0.517"
+  },
+  "devDependencies": {
+    "@types/node": "22.18.0",
+    "@types/react": "18.3.28",
+    "@types/react-dom": "18.3.7",
+    "typescript": "5.9.2"
+  },
+  "packageManager": "pnpm@11.9.0"
+}

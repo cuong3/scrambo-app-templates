@@ -1,0 +1,18 @@
+{
+  "name": "@scrambo/chat-edit",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "node --watch server.js",
+    "start": "node server.js",
+    "check": "node --check server.js && node --check public/command-chain.js && node --check public/session-lifecycle.js && node --check public/chat-intent.js && node --check public/app.js",
+    "test": "node --test"
+  },
+  "engines": {
+    "node": ">=22"
+  },
+  "dependencies": {
+    "@scrambo/shared": "workspace:*"
+  }
+}

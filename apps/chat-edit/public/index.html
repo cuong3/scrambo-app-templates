@@ -1,0 +1,111 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="Session, upload, chat, and editor flow for the Scrambo Stateful Agent API v2." />
+    <title>Scrambo Chat Edit</title>
+    <link href="https://fonts.googleapis.com/css2?family=Jockey+One&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/styles.css" />
+  </head>
+  <body>
+    <div id="app">
+      <header class="topbar">
+        <div class="logo">scram<span class="logo-bo">bo</span></div>
+        <div class="topbar-session" id="topbar-session" hidden>
+          <span class="topbar-project" id="topbar-project"></span>
+          <span class="topbar-session-id" id="topbar-session-id" title=""></span>
+          <button class="btn-ghost" type="button" id="new-session-button">New session</button>
+        </div>
+        <div class="topbar-spacer"></div>
+        <div class="api-status">
+          <span class="status-dot" id="api-dot"></span>
+          <span id="api-label">Checking API…</span>
+        </div>
+      </header>
+
+      <main class="stage">
+        <section class="screen" id="screen-session">
+          <div class="card session-card">
+            <h1>Start a new editing session</h1>
+            <p class="muted">A private Scrambo workspace will hold your media and edit history.</p>
+            <form id="session-form">
+              <label for="project-name">Project name</label>
+              <input id="project-name" name="project" maxlength="120" required placeholder="my-project" autocomplete="off" />
+              <p class="warning" id="session-warning" hidden></p>
+              <button class="btn-primary" type="submit" id="session-submit">Create</button>
+            </form>
+            <p class="status-line" id="session-status"></p>
+          </div>
+        </section>
+
+        <section class="screen" id="screen-upload" hidden>
+          <div class="card upload-card">
+            <h1>Upload footage</h1>
+            <p class="muted">Add one or more files. You can keep adding files any time before or during chat.</p>
+            <div class="dropzone" id="dropzone" tabindex="0" role="button" aria-label="Upload files">
+              <p>Drag files here, or <button type="button" class="btn-link" id="browse-button">browse</button></p>
+              <p class="muted small">Video, audio, or image files</p>
+            </div>
+            <input type="file" id="file-input" multiple accept="video/*,audio/*,image/*" hidden />
+            <div class="asset-list" id="asset-list"><p class="empty-state">No files uploaded.</p></div>
+            <div class="upload-actions">
+              <span class="status-line" id="upload-status"></span>
+              <button class="btn-primary" type="button" id="continue-button">Continue to chat →</button>
+            </div>
+          </div>
+        </section>
+
+        <section class="screen screen-wide" id="screen-chat" hidden>
+          <div class="chat-workspace">
+            <aside class="panel agents-panel">
+              <button class="btn-ghost upload-more-button" type="button" id="chat-back-to-upload">↑ Upload more files</button>
+              <section class="uploaded-files" aria-labelledby="uploaded-files-heading">
+                <div class="uploaded-files-heading" id="uploaded-files-heading">Uploaded files</div>
+                <div class="uploaded-file-list" id="uploaded-file-list" aria-live="polite"></div>
+              </section>
+              <div class="panel-title">How this works</div>
+              <ol class="how-it-works">
+                <li><span class="step-num">1</span>Choose a template or describe an edit.</li>
+                <li><span class="step-num">2</span>Customize its generate, prepare, and edit instructions.</li>
+                <li><span class="step-num">3</span>We run each step from top to bottom.</li>
+              </ol>
+              <div class="tip-box">
+                <strong>Tip</strong>
+                <p>#prepare understands footage, while #generate creates new assets. Use #edit for the cut, or a specialist such as #edit-captions, #edit-graphics, #edit-sound, or #edit-titles.</p>
+              </div>
+            </aside>
+
+            <div class="chat-slot">
+              <section class="panel chat-panel">
+                <div class="messages" id="messages" role="log" aria-live="polite"></div>
+                <div class="composer-area">
+                  <textarea id="chat-input" rows="9" placeholder="Describe an edit, or choose a template and customize its #generate, #prepare, and #edit steps…" aria-label="Message or editable workflow"></textarea>
+                  <div class="workflow-preview" id="workflow-preview" hidden></div>
+                  <div class="dsl-errors" id="dsl-errors" role="alert" hidden></div>
+                  <label class="ask-toggle-row">
+                    <input type="checkbox" id="ask-toggle" />
+                    Just asking a question — don't change the edit
+                  </label>
+                  <div class="composer-row">
+                    <button class="btn-primary send-button" id="send-button" type="button"><span id="send-label">Send</span></button>
+                    <button class="composer-action open-editor-button" type="button" id="open-editor-button" disabled>Open editor ↗</button>
+                    <button class="composer-action download-handoff-button" type="button" id="download-handoff-button" disabled>Download handoff ⇩</button>
+                  </div>
+                  <div class="composer-help"><span id="composer-status">Create a session to begin.</span><span id="character-count">0 / 20,000</span></div>
+                </div>
+              </section>
+            </div>
+
+            <aside class="panel info-panel">
+              <div class="panel-title">Templates</div>
+              <div class="quick-actions templates-list" id="quick-actions"></div>
+            </aside>
+          </div>
+        </section>
+      </main>
+    </div>
+
+    <script type="module" src="/app.js"></script>
+  </body>
+</html>

@@ -1,0 +1,163 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="Turn listing photos into a narrated, captioned house tour with Scrambo Stateful API V2." />
+    <title>Magic House Tour · Scrambo</title>
+    <link rel="stylesheet" href="/styles.css" />
+  </head>
+  <body>
+    <div class="page-shell">
+      <header class="topbar">
+        <a class="brand" href="/" aria-label="Scrambo Magic House Tour home">
+          <span class="brand-mark">S</span>
+          <span>scrambo</span>
+        </a>
+        <div class="api-state" aria-live="polite">
+          <span class="api-dot" id="api-dot"></span>
+          <span id="api-label">Checking Scrambo…</span>
+        </div>
+      </header>
+
+      <main>
+        <section class="screen screen-select" id="screen-select">
+          <div class="hero-copy">
+            <div class="eyebrow">AI LISTING STUDIO</div>
+            <h1>Still photos in.<br /><em>House tour out.</em></h1>
+            <p>Upload a few listing photos. Scrambo will plan the camera motion, write the voiceover, generate the footage, and edit the reel.</p>
+            <div class="hero-flow" aria-label="Workflow">
+              <span>Photos</span><b>→</b><span>Creative review</span><b>→</b><span>Finished reel</span>
+            </div>
+          </div>
+
+          <div class="studio-card">
+            <div class="card-heading">
+              <div>
+                <span class="step-kicker">STEP 01</span>
+                <h2>Add listing photos</h2>
+              </div>
+              <span class="photo-count" id="photo-count">0 / 6</span>
+            </div>
+
+            <label class="field-label" for="project-name">Tour name</label>
+            <input class="text-input" id="project-name" maxlength="120" value="magic-house-tour" autocomplete="off" />
+
+            <div class="dropzone" id="dropzone" tabindex="0" role="button" aria-label="Choose listing photos">
+              <div class="upload-icon">↑</div>
+              <strong>Drop listing photos here</strong>
+              <span>or click to browse · JPEG, PNG, or WebP</span>
+            </div>
+            <input id="file-input" type="file" accept="image/jpeg,image/png,image/webp" multiple hidden />
+
+            <div class="photo-grid" id="photo-grid">
+              <div class="empty-grid">Choose 2–6 photos to begin.</div>
+            </div>
+
+            <div class="fixed-settings" aria-label="Generation settings">
+              <div><span>CLIP</span><strong>4 seconds</strong></div>
+              <div><span>MODEL</span><strong>Veo 3.1 Fast</strong></div>
+              <div><span>FINAL</span><strong>Vertical 9:16</strong></div>
+            </div>
+
+            <p class="status-message" id="select-status" role="alert"></p>
+            <button class="primary-button magic-button" id="create-button" type="button" disabled>
+              <span class="spark">✦</span> Create Magic House Tour
+            </button>
+            <p class="cost-note">Generation is capped at $5 for this demo and may incur usage charges.</p>
+          </div>
+        </section>
+
+        <section class="screen screen-working" id="screen-analyzing" hidden>
+          <div class="working-orbit"><span>✦</span></div>
+          <span class="step-kicker">SCRAMBO IS THINKING</span>
+          <h1>Studying your listing</h1>
+          <p id="analyzing-status">Creating a private editing session…</p>
+          <div class="working-bar"><span id="analyzing-bar"></span></div>
+          <div class="mini-photo-row" id="analyzing-photos"></div>
+        </section>
+
+        <section class="screen screen-review" id="screen-review" hidden>
+          <div class="review-header">
+            <div>
+              <span class="step-kicker">STEP 02 · HUMAN REVIEW</span>
+              <h1>Make it yours</h1>
+              <p>Scrambo drafted the motion and narration. Edit anything before paid generation starts.</p>
+            </div>
+            <div class="mini-photo-row" id="review-photos"></div>
+          </div>
+
+          <div class="review-grid">
+            <article class="review-card">
+              <div class="review-card-heading">
+                <div class="review-icon video-icon">▶</div>
+                <div><span>GOOGLE VEO</span><h2>Shot prompts</h2></div>
+              </div>
+              <p>One architecture-preserving camera move for every uploaded photo.</p>
+              <textarea id="video-prompts" maxlength="13000" aria-label="Editable Veo shot prompts"></textarea>
+            </article>
+
+            <article class="review-card narration-card">
+              <div class="review-card-heading">
+                <div class="review-icon audio-icon">◖</div>
+                <div><span>ELEVENLABS</span><h2>Narration</h2></div>
+              </div>
+              <p>A warm voiceover sized to the generated footage.</p>
+              <textarea id="narration" maxlength="5000" aria-label="Editable narration script"></textarea>
+              <div class="narration-meta">
+                <span id="word-count">0 words</span>
+                <span id="duration-estimate">≈ 0 sec</span>
+                <span id="target-duration">Target: 0 sec</span>
+              </div>
+            </article>
+          </div>
+
+          <p class="status-message" id="review-status" role="alert"></p>
+          <div class="review-actions">
+            <button class="secondary-button" id="back-button" type="button">← Change photos</button>
+            <button class="primary-button" id="generate-button" type="button"><span class="spark">✦</span> Generate &amp; edit reel</button>
+          </div>
+        </section>
+
+        <section class="screen screen-progress" id="screen-progress" hidden>
+          <div class="progress-heading">
+            <span class="step-kicker">STEP 03 · PRODUCTION</span>
+            <h1>Building your house tour</h1>
+            <p>Each agent hands its result to the next. This can take several minutes.</p>
+          </div>
+
+          <ol class="pipeline" id="pipeline">
+            <li data-pipeline-step="0"><span class="pipeline-number">01</span><div><strong>Generate footage &amp; voiceover</strong><small>Veo + ElevenLabs</small><p></p></div><span class="pipeline-state">Waiting</span></li>
+            <li data-pipeline-step="1"><span class="pipeline-number">02</span><div><strong>Plan the story</strong><small>Planner · transcript-aware</small><p></p></div><span class="pipeline-state">Waiting</span></li>
+            <li data-pipeline-step="2"><span class="pipeline-number">03</span><div><strong>Assemble the reel</strong><small>Timeline Author</small><p></p></div><span class="pipeline-state">Waiting</span></li>
+            <li data-pipeline-step="3"><span class="pipeline-number">04</span><div><strong>Add word-reveal captions</strong><small>Captions specialist</small><p></p></div><span class="pipeline-state">Waiting</span></li>
+          </ol>
+          <div class="progress-error" id="progress-error" hidden>
+            <strong>Production paused</strong>
+            <p id="progress-error-message"></p>
+            <div><button class="secondary-button" id="edit-drafts-button" type="button">Edit drafts</button><button class="primary-button" id="retry-button" type="button">Try again</button></div>
+          </div>
+        </section>
+
+        <section class="screen screen-done" id="screen-done" hidden>
+          <div class="done-card">
+            <div class="done-badge">✓</div>
+            <span class="step-kicker">TOUR COMPLETE</span>
+            <h1>Your listing is ready to move</h1>
+            <p>Generated footage, narration, story edit, and captions are now one immutable Scrambo revision.</p>
+            <div class="done-stats">
+              <div><strong id="done-photo-count">0</strong><span>generated shots</span></div>
+              <div><strong id="done-duration">0s</strong><span>narration estimate</span></div>
+              <div><strong>9:16</strong><span>social canvas</span></div>
+            </div>
+            <p class="snapshot-status" id="snapshot-status"></p>
+            <button class="primary-button open-button" id="open-editor-button" type="button">Open finished reel ↗</button>
+            <button class="text-button" id="new-tour-button" type="button">Create another tour</button>
+          </div>
+        </section>
+      </main>
+    </div>
+
+    <script type="module" src="/app.js"></script>
+  </body>
+</html>

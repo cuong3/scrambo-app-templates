@@ -1,0 +1,37 @@
+primary_region = "sjc"
+
+[build]
+  dockerfile = "apps/chat-edit/Dockerfile"
+
+[env]
+  HOST = "0.0.0.0"
+  PORT = "8080"
+  MAX_UPLOAD_BYTES = "2147483648"
+  MAX_CONCURRENT_UPLOADS = "2"
+  RATE_LIMIT_PER_MINUTE = "300"
+  UPSTREAM_TIMEOUT_MS = "30000"
+  UPLOAD_TIMEOUT_MS = "900000"
+
+[http_service]
+  internal_port = 8080
+  force_https = true
+  auto_stop_machines = "stop"
+  auto_start_machines = true
+  min_machines_running = 0
+
+  [http_service.concurrency]
+    type = "requests"
+    soft_limit = 20
+    hard_limit = 25
+
+  [[http_service.checks]]
+    grace_period = "10s"
+    interval = "15s"
+    method = "GET"
+    path = "/healthz"
+    timeout = "2s"
+
+[[vm]]
+  cpu_kind = "shared"
+  cpus = 1
+  memory = "1gb"
