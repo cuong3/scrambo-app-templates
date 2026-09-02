@@ -2,6 +2,7 @@
   "name": "@scrambo/handoff-remotion",
   "version": "0.1.0",
   "private": true,
+  "license": "MIT",
   "type": "module",
   "scripts": {
     "caption:v2": "node --experimental-strip-types v2-caption-render.ts",

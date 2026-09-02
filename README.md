@@ -88,3 +88,11 @@ pnpm verify
 No real credential belongs in this repository. `.env`, private-key files,
 rendered media, logs, and common build output are ignored. Review
 [`SECURITY.md`](SECURITY.md) before publishing or transferring a copy.
+
+## License
+
+These templates are available under the [MIT License](LICENSE). You may use,
+modify, and distribute them in your own applications, including commercial
+applications. The MIT License applies only to the source code in this
+repository. Use of the hosted Scrambo API is governed separately by the
+applicable Scrambo service terms.
